@@ -1,3 +1,7 @@
+# Experiment for Ishan Somshekar in Linguist 245 
+This repo contains the replication of the experiment detailed in _____________.
+
+
 # Software installation for Linguist 245 (Spr 2018)
 
 ## Install Python 2 & Java
