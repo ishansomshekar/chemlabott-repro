@@ -6,7 +6,7 @@ function make_slides(f) {
      start: function() {
       exp.startT = Date.now();
       $("#consent_2").hide();
-      exp.consent_position = 0;      
+      exp.consent_position = 0;
      },
     button : function() {
       if(exp.consent_position == 0) {

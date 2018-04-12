@@ -9,7 +9,8 @@ This repo contains the replication of the experiment detailed in _____________.
 In this course we will not directly program in Python or Java, but some software we use depends on them, so make sure you [have installed Python 2](https://www.python.org/downloads/release/python-2714/) (**even if you have installed Python 3, as it is not backward compatible!**).
 Type in the terminal `python`. It should open an interactive interpreter and you can see the  version of Python. If it shows Python 3, it might be because you have both versions installed, in which case type in the terminal `python2` instead of `python` (type `exit()` to close the interpreter first).
 
-As for Java, download and install Java Runtime Environment (JRE) from: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+As for Java, download and install Java Runtime Environment (JRE) from: http://www.oracle.com/technetwork/java/javase/downloads/index.html  
+(You need to install JAVA 8 or above)
 
 After installation, type in the terminal `java -version` to make sure that everything is working.
 
