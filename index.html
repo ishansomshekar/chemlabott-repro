@@ -92,53 +92,55 @@ Otherwise, modified to whatever is required for you given your affliation.
 
 <div class="slide" id="instructions">
   <h3>Instructions</h3>
-  <p>Here are some instructions.</p>
+  <p>You will see several pairs of images and a true statement that describes them. Afterwards you will be shown another statement, and asked to choose which image better suits it.</p>
   <button onclick="_s.button()">Continue</button>
 </div>
 
-  <div class="slide" id="single_trial">
-    <p>Here is a single trial. Depending on the condition, you'll see different words below:</p>
-    <p class="display_condition">{{}}</p>
-    <input type="text" id="text_response"></input>
+
+
+
+  <div class="slide" id="weak_primer">
+    <p>The following statement describes these images</p>
+    <p id="weak_primeSentence"></p>
+    <div>
+    <img id="weak_leftImage" width="200" height="300">
+    <img id="weak_rightImage" width="200" height="300">
+    </div>
     <button onclick="_s.button()">Continue</button>
-    <p class="err">Please write something.</p>
   </div>
 
-  <div class="slide" id="one_slider">
-    <p>Here is one slider. For every trial in this block, you get an input to the 'present_handle' function. You can use that variable to display different prompts:</p>
-    <p class="prompt"></p>
-    <table id="slider_table" class="slider_table">
-      <tr><td class="left">completely disagree</td><td class="right">completely agree</td></tr>
-      <tr><td colspan="2"><div id="single_slider" class="slider"></div></td></tr>
-    </table>
-    <button onclick="_s.button()">Continue</button>
-    <div class="err">Please adjust the slider before continuing.</div>
+  <div class="slide" id="weak_trial">
+    <p>Choose the picture that better suits the statement</p>
+    <p id="weak_prime-test"></p>
+    <div>
+    <label><input type="radio"  name="assess" value="basic"/><img id="weak_left-test" width="200" height="300"> </label>
+    <label><input type="radio"  name="assess" value="better"/><img id="weak_right-test" width="200" height="300"> </label>
+    </div>
+    <button onclick="_s.button()">Continue</button>   
   </div>
 
-  <div class="slide" id="multi_slider">
-    <p>Here are a bunch of sliders.</p>
-    <p>How likely do you think it is that someone would say each of the following?</p>
-    <table id="multi_slider_table" class="slider_table">
-      <tr><td></td><td class="left">very unlikely</td><td class="right">very likely</td></tr>
-    </table>
+  <div class="slide" id="strong_primer">
+    <p>The following statement describes these images</p>
+    <p id="strong_primeSentence"></p>
+    <div>
+    <img id="strong_leftImage" width="200" height="300">
+    <img id="strong_rightImage" width="200" height="300">
+    </div>
     <button onclick="_s.button()">Continue</button>
-    <div class="err">Please adjust all the sliders before continuing.</div>
   </div>
 
-  <div class="slide" id="vertical_sliders">
-    <p>Here are a bunch of vertical sliders.</p>
-    <p id="vertical_question">{{}}</p>
-    <table id="vertical_slider_table" class="slider_table">
-      <tbody>
-        <tr id="sliders">
-        </tr>
-        <tr id="bin_labels">
-        </tr>
-      </tbody>
-    </table>
-    <button onclick="_s.button()">Continue</button>
-    <div class="err">Please adjust all the sliders before continuing.</div>
+  <div class="slide" id="strong_trial">
+    <p>Choose the picture that better suits the statement</p>
+    <p id="strong_prime-test"></p>
+    <div>
+    <label><input type="radio"  name="assess" value="basic"/><img id="strong_left-test" width="200" height="300"> </label>
+    <label><input type="radio"  name="assess" value="better"/><img id="strong_right-test" width="200" height="300"> </label>
+    </div>
+    <button onclick="_s.button()">Continue</button>   
   </div>
+
+
+
 
   <div class="slide"  id="subj_info">
     <div class="long_form">

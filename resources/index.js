@@ -33,229 +33,178 @@ function make_slides(f) {
     }
   });
 
-  slides.single_trial = slide({
-    name: "single_trial",
-    start: function() {
-      $(".err").hide();
-      $(".display_condition").html("You are in " + exp.condition + ".");
-    },
-    button : function() {
-      response = $("#text_response").val();
-      if (response.length == 0) {
-        $(".err").show();
-      } else {
-        exp.data_trials.push({
-          "trial_type" : "single_trial",
-          "response" : response
-        });
-        exp.go(); //make sure this is at the *end*, after you log your data
-      }
-    },
-  });
-
-  slides.one_slider = slide({
-    name : "one_slider",
+  slides.weak_primer = slide({
+    name : "weak_primer",
 
     /* trial information for this block
      (the variable 'stim' will change between each of these values,
       and for each of these, present_handle will be run.) */
-    present : [
-      {subject: "dog", object: "ball"},
-      {subject: "cat", object: "windowsill"},
-      {subject: "bird", object: "shiny object"},
-    ],
+    // present : _.shuffle([
+    //    "John and Mary laugh.",
+    //    "Does John and Mary laugh?",
+    //    "John and I am happy."
+    // ]),    
+
+    present : _.shuffle([
+       ["There are 5 clubs", "club6.png", "club9.png", "weak primer",],
+       ["There are 3 diamonds", "diam4.png", "diam6.png", "weak primer",],
+       ["There are 4 hearts", "hear6.png", "hear5.png", "weak primer",],
+    ]),
 
     //this gets run only at the beginning of the block
     present_handle : function(stim) {
       $(".err").hide();
 
-      this.stim = stim; //I like to store this information in the slide so I can record it later.
+      // uncheck the button and erase the previous value 
+      $("#weak_primeSentence").html(stim[0]);
+      document.getElementById("weak_leftImage").src=stim[1];
+      document.getElementById("weak_rightImage").src=stim[2];
 
 
-      $(".prompt").html(stim.subject + "s like " + stim.object + "s.");
-      this.init_sliders();
-      exp.sliderPost = null; //erase current slider value
+      this.stim = stim; //you can store this information in the slide so you can record it later.
+
     },
 
     button : function() {
-      if (exp.sliderPost == null) {
-        $(".err").show();
-      } else {
-        this.log_responses();
+      //find out the checked option
+      this.log_responses();
 
         /* use _stream.apply(this); if and only if there is
         "present" data. (and only *after* responses are logged) */
-        _stream.apply(this);
-      }
-    },
-
-    init_sliders : function() {
-      utils.make_slider("#single_slider", function(event, ui) {
-        exp.sliderPost = ui.value;
-      });
+      _stream.apply(this);
+      
     },
 
     log_responses : function() {
       exp.data_trials.push({
-        "trial_type" : "one_slider",
-        "response" : exp.sliderPost
+        "trial_type" : "primer",
+        "prime_status": this.stim[3], // don't forget to log the stimulus
+        "prime_sentence" : this.stim[0]
       });
     }
-  });
+  });  
 
-  slides.multi_slider = slide({
-    name : "multi_slider",
-    present : _.shuffle([
-      {"critter":"Wugs", "property":"fur"},
-      {"critter":"Blicks", "property":"fur"}
-    ]),
+
+// 
+  slides.weak_trial = slide({
+    name: "weak_trial",
+    present : [
+       ["there are 5 spades", "spad6.png", "better.png", "weak prime, they should choose image here",],
+    ],
+
     present_handle : function(stim) {
       $(".err").hide();
-      this.stim = stim; //FRED: allows you to access stim in helpers
 
-      this.sentence_types = _.shuffle(["generic", "negation", "always", "sometimes", "usually"]);
-      var sentences = {
-        "generic": stim.critter + " have " + stim.property + ".",
-        "negation": stim.critter + " do not have " + stim.property + ".",
-        "always": stim.critter + " always have " + stim.property + ".",
-        "sometimes": stim.critter + " sometimes have " + stim.property + ".",
-        "usually": stim.critter + " usually have " + stim.property + "."
-      };
+      // uncheck the button and erase the previous value 
+      $("#weak_prime-test").html(stim[0]);
+      document.getElementById("weak_left-test").src=stim[1];
+      document.getElementById("weak_right-test").src=stim[2];
 
-      this.n_sliders = this.sentence_types.length;
-      $(".slider_row").remove();
-      for (var i=0; i<this.n_sliders; i++) {
-        var sentence_type = this.sentence_types[i];
-        var sentence = sentences[sentence_type];
-        $("#multi_slider_table").append('<tr class="slider_row"><td class="slider_target" id="sentence' + i + '">' + sentence + '</td><td colspan="2"><div id="slider' + i + '" class="slider">-------[ ]--------</div></td></tr>');
-        utils.match_row_height("#multi_slider_table", ".slider_target");
-      }
 
-      this.init_sliders(this.sentence_types);
-      exp.sliderPost = [];
-    },
+      this.stim = stim; //you can store this information in the slide so you can record it later.
+
+    },    
 
     button : function() {
-      if (exp.sliderPost.length < this.n_sliders) {
-        $(".err").show();
-      } else {
-        this.log_responses();
-        _stream.apply(this); //use _stream.apply(this); if and only if there is "present" data.
-      }
+      //find out the checked option
+      this.log_responses();
+
+        /* use _stream.apply(this); if and only if there is
+        "present" data. (and only *after* responses are logged) */
+      _stream.apply(this);
+      
     },
 
-    init_sliders : function(sentence_types) {
-      for (var i=0; i<sentence_types.length; i++) {
-        var sentence_type = sentence_types[i];
-        utils.make_slider("#slider" + i, this.make_slider_callback(i));
-      }
-    },
-    make_slider_callback : function(i) {
-      return function(event, ui) {
-        exp.sliderPost[i] = ui.value;
-      };
-    },
     log_responses : function() {
-      for (var i=0; i<this.sentence_types.length; i++) {
-        var sentence_type = this.sentence_types[i];
-        exp.data_trials.push({
-          "trial_type" : "multi_slider",
-          "sentence_type" : sentence_type,
-          "response" : exp.sliderPost[i]
-        });
-      }
+      exp.data_trials.push({
+        "trial_type" : "trial",
+        "prime_sentence" : this.stim[0],
+        "prime_status" : false,
+        "response" : $('input[name="assess"]:checked').val(),
+      });
     },
   });
 
-  slides.vertical_sliders = slide({
-    name : "vertical_sliders",
+
+  slides.strong_primer = slide({
+    name : "strong_primer",
     present : _.shuffle([
-      {
-        "bins" : [
-          {
-            "min" : 0,
-            "max" : 10
-          },
-          {
-            "min" : 10,
-            "max" : 20
-          },
-          {
-            "min" : 20,
-            "max" : 30
-          },
-          {
-            "min" : 30,
-            "max" : 40
-          },
-          {
-            "min" : 40,
-            "max" : 50
-          },
-          {
-            "min" : 50,
-            "max" : 60
-          }
-        ],
-        "question": "How tall is tall?"
-      }
+       ["There are 4 spades", "spad4.png", "spad6.png", "strong primer",],
+       ["There are 3 clubs", "club9.png", "club3.png", "strong primer",],
+       ["There are 5 hearts", "hear5.png", "hear6.png", "strong primer",],
     ]),
+
+    //this gets run only at the beginning of the block
     present_handle : function(stim) {
       $(".err").hide();
-      this.stim = stim;
 
-      $("#vertical_question").html(stim.question);
+      // uncheck the button and erase the previous value 
+      $("#strong_primeSentence").html(stim[0]);
+      document.getElementById("strong_leftImage").src=stim[1];
+      document.getElementById("strong_rightImage").src=stim[2];
 
-      $("#sliders").empty();
-      $("#bin_labels").empty();
 
-      $("#sliders").append('<td> \
-            <div id="slider_endpoint_labels"> \
-              <div class="top">likely</div> \
-              <div class="bottom">unlikely</div>\
-            </div>\
-          </td>')
-      $("#bin_labels").append('<td></td>')
+      this.stim = stim; //you can store this information in the slide so you can record it later.
 
-      this.n_sliders = stim.bins.length;
-      for (var i=0; i<stim.bins.length; i++) {
-        $("#sliders").append("<td><div id='vslider" + i + "' class='vertical_slider'>|</div></td>");
-        $("#bin_labels").append("<td class='bin_label'>" + stim.bins[i].min + " - " + stim.bins[i].max + "</td>");
-      }
-
-      this.init_sliders(stim);
-      exp.sliderPost = [];
     },
 
     button : function() {
-      if (exp.sliderPost.length < this.n_sliders) {
-        $(".err").show();
-      } else {
-        this.log_responses();
-        _stream.apply(this); //use _stream.apply(this); if and only if there is "present" data.
-      }
+      //find out the checked option
+      this.log_responses();
+
+        /* use _stream.apply(this); if and only if there is
+        "present" data. (and only *after* responses are logged) */
+      _stream.apply(this);
+      
     },
 
-    init_sliders : function(stim) {
-      for (var i=0; i<stim.bins.length; i++) {
-        utils.make_slider("#vslider" + i, this.make_slider_callback(i), "vertical");
-      }
-    },
-    make_slider_callback : function(i) {
-      return function(event, ui) {
-        exp.sliderPost[i] = ui.value;
-      };
-    },
     log_responses : function() {
-      for (var i=0; i<this.stim.bins.length; i++) {
-        exp.data_trials.push({
-          "trial_type" : "vertical_slider",
-          "question" : this.stim.question,
-          "response" : exp.sliderPost[i],
-          "min" : this.stim.bins[i].min,
-          "max" : this.stim.bins[i].max
-        });
-      }
+      exp.data_trials.push({
+        "trial_type" : "primer",
+        "prime_status": this.stim[3], // don't forget to log the stimulus
+        "prime_sentence" : this.stim[0]
+      });
+    }
+  });  
+
+
+// 
+  slides.strong_trial = slide({
+    name: "strong_trial",
+    present : [
+       ["there are 4 diamonds", "diam5.png", "better.png", "strong prime, they should choose better here",],
+    ],
+
+    present_handle : function(stim) {
+      $(".err").hide();
+
+      // uncheck the button and erase the previous value 
+      $("#strong_prime-test").html(stim[0]);
+      document.getElementById("strong_left-test").src=stim[1];
+      document.getElementById("strong_right-test").src=stim[2];
+
+
+      this.stim = stim; //you can store this information in the slide so you can record it later.
+
+    },    
+
+    button : function() {
+      //find out the checked option
+      this.log_responses();
+
+        /* use _stream.apply(this); if and only if there is
+        "present" data. (and only *after* responses are logged) */
+      _stream.apply(this);
+      
+    },
+
+    log_responses : function() {
+      exp.data_trials.push({
+        "trial_type" : "trial",
+        "prime_sentence" : this.stim[0],
+        "prime_status" : true,
+        "response" : $('input[name="assess"]:checked').val(),
+      });
     },
   });
 
@@ -310,7 +259,7 @@ function init() {
       screenUW: exp.width
     };
   //blocks of the experiment:
-  exp.structure=["i0", "consent", "instructions", "single_trial", "one_slider", "multi_slider", "vertical_sliders", 'subj_info', 'thanks'];
+  exp.structure=["i0", "consent", "instructions", "weak_primer", "weak_trial", "strong_primer", "strong_trial", 'subj_info', 'thanks'];
 
   exp.data_trials = [];
   //make corresponding slides:
