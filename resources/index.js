@@ -309,7 +309,7 @@ function init() {
       for (var k = 0; k < 3; k++) {
         trial_types = ["some", "four", "six"];
 
-        for (var x = 0; x < 1; x++ ) {
+        for (var x = 0; x < 3; x++ ) {
           dict = {};
           dict["filler"] = "false";
 
@@ -428,7 +428,7 @@ function init() {
     for (var j = 0; j < 2; j++) {
       strength_types = ["weak_", "strong_"];
 
-      for (var x = 0; x < 1; x++ ) {
+      for (var x = 0; x < 2; x++ ) {
         dict = {};
         dict["filler"] = "true";
 
