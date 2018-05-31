@@ -50,7 +50,10 @@ $(function(){
 
   <div class="slide" id="i0" >
     <p id="cocolab">Stanford Linguistics</p>
-    <p id="instruct-text">You will see some stuff and be asked some questions. The HIT should take ~2 minutes. Please pay attention, thanks!</p>
+    <p id="instruct-text">        
+        You will read a number of sentences, and for each sentence will have to select a card which best represents the sentence. </p>
+    <p>The HIT should take ~10 minutes.
+        Please pay attention, thank you!</p>
     <button id="start_button" type="button">Start Experiment</button>
   </div>
 
@@ -80,66 +83,81 @@ Otherwise, modified to whatever is required for you given your affliation.
   <p>If you are not satisfied with how this study is being conducted, or if you have any concerns,
   complaints, or general questions about the research or your rights as a participant, please
   contact the Stanford Institutional Review Board (IRB) to speak to someone independent of the
-  research team at (650)-723-2480 or toll free at 1-866-680-2906. You can also write to the
-  Stanford IRB, Stanford University,
-  3000 El Camino Real, Five Palo Alto Square, 4th Floor,
-  Palo Alto, CA 94306 USA.</p>
+  research team at (650)-723-2480 or toll free at 1-866-680-2906. 
+  You can also write to the Stanford IRB, Stanford University, 3000 El Camino Real, Five Palo Alto Square, 4th Floor, Palo Alto, CA 94306 USA.</p>
   <p>You may print this contact information for your records.</p>
   <p>If you agree to participate, please proceed to the study tasks.</p>
   </div>
-      <button onclick="_s.button()">Continue</button>
+      <button  id="consentButton" onclick="_s.button()">Continue</button>
 </div>
 
 <div class="slide" id="instructions">
   <h3>Instructions</h3>
-  <p>You will see several pairs of images and a true statement that describes them. Afterwards you will be shown another statement, and asked to choose which image better suits it.</p>
-  <button onclick="_s.button()">Continue</button>
+  <p>You will read a number English sentences and for each sentence you will be asked to select a card which best reflects the sentence. </p>
+  <p>Click on the card with your mouse to select it, and then you can press the space bar to navigate to the next card.</p>
+  <p>
+  The next two slides will help to familiarize you with the task before the experiment begins.
+  </p>
+</p>
+  <button id="consentButton" onclick="_s.button()">Continue</button>
 </div>
 
-
-
-
-  <div class="slide" id="weak_primer">
-    <p>The following statement describes these images</p>
-    <p id="weak_primeSentence"></p>
-    <div>
-    <img id="weak_leftImage" width="200" height="300">
-    <img id="weak_rightImage" width="200" height="300">
-    </div>
-    <button onclick="_s.button()">Continue</button>
+<div class="slide" id="example1">
+  <p> Many of the symbols are diamonds</p>
+  <div>
+    <label id="exp_radio"><input type="radio"   name="assess-example1" value="left" /><img src="resources/img/diamond8spade1.png" width="200" height="300"></label>
+    <label id="exp_radio"><input type="radio"  name="assess-example1" value="right"/><img src="resources/img/diamond3spade6.png" width="200" height="300"></label>   
   </div>
+  <input type="button" id="exampleButton1" value="Continue" onclick="_s.ex1button()"> 
+  <div class="err" id="exampleErr1"></div> 
 
-  <div class="slide" id="weak_trial">
-    <p>Choose the picture that better suits the statement</p>
-    <p id="weak_prime-test"></p>
-    <div>
-    <label><input type="radio"  name="assess" value="basic"/><img id="weak_left-test" width="200" height="300"> </label>
-    <label><input type="radio"  name="assess" value="better"/><img id="weak_right-test" width="200" height="300"> </label>
-    </div>
-    <button onclick="_s.button()">Continue</button>   
+</div>
+
+<div class="slide" id="example2">
+  <p> There is a club above a square</p>
+  <div>
+    <label id="exp_radio"><input type="radio"   name="assess-example2" value="left" /><img src="resources/img/club1square1.png" width="200" height="300"></label>
+    <label id="exp_radio"><input type="radio"  name="assess-example2" value="right"/><img src="resources/img/better.png" width="200" height="300"></label>   
   </div>
+  <input type="button" id="exampleButton2" value="Continue" onclick="_s.ex2button()"> 
+  <div class="err" id="exampleErr2"></div> 
 
-  <div class="slide" id="strong_primer">
-    <p>The following statement describes these images</p>
-    <p id="strong_primeSentence"></p>
+</div>
+
+<div class="slide" id="all_slides">
+  <p id = "category"></p>
+  <div id = "p1_div">
+    <p id = "p1-sentence"></p>
+
     <div>
-    <img id="strong_leftImage" width="200" height="300">
-    <img id="strong_rightImage" width="200" height="300">
+      <label id="exp_radio"><input type="radio"   name="assess-p1" value="left" /><img id="p1-left-image" width="200" height="300"></label>
+      <label id="exp_radio"><input type="radio"  name="assess-p1" value="right"/><img id="p1-right-image" width="200" height="300"></label>   
     </div>
-    <button onclick="_s.button()">Continue</button>
+    <input type="button" id="continueButton" value="Continue" onclick="_s.button1()">
   </div>
+  <div id = "p2_div">
+    <p id = "p2-sentence"></p>
 
-  <div class="slide" id="strong_trial">
-    <p>Choose the picture that better suits the statement</p>
-    <p id="strong_prime-test"></p>
     <div>
-    <label><input type="radio"  name="assess" value="basic"/><img id="strong_left-test" width="200" height="300"> </label>
-    <label><input type="radio"  name="assess" value="better"/><img id="strong_right-test" width="200" height="300"> </label>
+      <label id="exp_radio"><input type="radio"  name="assess-p2" value="left" /><img id="p2-left-image" width="200" height="300"></label>
+      <label id="exp_radio"><input type="radio"  name="assess-p2" value="right"/><img id="p2-right-image" width="200" height="300"></label>   
     </div>
-    <button onclick="_s.button()">Continue</button>   
+    <input type="button" id="continueButton2" value="Continue" onclick="_s.button2()">
+  </div>  
+  <div id = "t_div">
+
+    <p id = "t-sentence"></p>
+
+    <div>
+      <label id="exp_radio"><input type="radio"  name="assess-t" value="left" /><img id="t-left-image" width="200" height="300"></label>
+      <label id="exp_radio"><input type="radio"  name="assess-t" value="right"/><img id="t-right-image" width="200" height="300"></label>   
+    </div>
+    <input type="button" id="trialButton" value="Continue" onclick="_s.button()">
   </div>
+  <div class="err">Please select one of the options.</div>
 
-
+  
+</div>
 
 
   <div class="slide"  id="subj_info">

@@ -29,187 +29,166 @@ function make_slides(f) {
   slides.instructions = slide({
     name : "instructions",
     button : function() {
+      window.addEventListener("keydown", exampleKeys);
       exp.go(); //use exp.go() if and only if there is no "present" data.
     }
   });
 
-  slides.weak_primer = slide({
-    name : "weak_primer",
-
-    /* trial information for this block
-     (the variable 'stim' will change between each of these values,
-      and for each of these, present_handle will be run.) */
-    // present : _.shuffle([
-    //    "John and Mary laugh.",
-    //    "Does John and Mary laugh?",
-    //    "John and I am happy."
-    // ]),    
-
-    present : _.shuffle([
-       ["There are 5 clubs", "club6.png", "club9.png", "weak primer",],
-       ["There are 3 diamonds", "diam4.png", "diam6.png", "weak primer",],
-       ["There are 4 hearts", "hear6.png", "hear5.png", "weak primer",],
-    ]),
-
-    //this gets run only at the beginning of the block
-    present_handle : function(stim) {
+  slides.example1 = slide({
+    name : "example1",
+    start : function() {
+      window.addEventListener("keydown", exampleKeys);
+    },
+    ex1button: function() {
+      ex_response = $('input[name="assess-example1"]:checked').val()
+      if (ex_response == "left") {
+        window.removeEventListener("keydown", exampleKeys);
+        window.addEventListener("keydown", exampleKeys2);
+        exp.go();
+      } else if (ex_response == "right") {
+        $("#exampleErr1").html("Are you sure? Please consider which card best matches the sentence and and try again.")
+        $(".err").show();
+      } else {
+        $("#exampleErr1").html("Please select one of the cards")
+        $(".err").show();
+      }
+    }
+  });
+  slides.example2 = slide({
+    name : "example2",
+    start : function() {
+      window.addEventListener("keydown", exampleKeys2);
+    },    
+    ex2button: function() {
+      ex_response = $('input[name="assess-example2"]:checked').val()
+      if (ex_response == "right") {
+        window.removeEventListener("keydown", exampleKeys2);
+        // window.addEventListener("keydown", continueKeys);
+        exp.go();
+      } else if (ex_response == "left") {
+        $("#exampleErr2").html("Are you sure? Please consider which card best matches the sentence and and try again.")
+        $(".err").show();
+      } else {
+        $("#exampleErr2").html("Please select one of the cards")
+        $(".err").show();
+      }
+    }
+  });
+  slides.all_slides = slide({
+    name : "all_slides",
+    present: exp.all_stims,
+    start : function() {
+      window.addEventListener("keydown", continueKeys);
       $(".err").hide();
 
-      // uncheck the button and erase the previous value 
-      $("#weak_primeSentence").html(stim[0]);
-      document.getElementById("weak_leftImage").src=stim[1];
-      document.getElementById("weak_rightImage").src=stim[2];
+    },
+    present_handle : function(stim) {
+      this.trial_start = Date.now();
+      this.stim = stim;
+      slide.condition = 0;
+      $('input[name=assess-p1]').attr('checked',false);
+      $('input[name=assess-p2]').attr('checked',false);
+      $('input[name=assess-t]').attr('checked',false);
+      document.getElementById('p1_div').style.display = 'block';
+      document.getElementById('p2_div').style.display = 'none';
+      document.getElementById('t_div').style.display = 'none';      
+      // $("#category").html(stim["category"]);
+      $("#p1-sentence").html(stim["p1-sentence"]);
+      // $("#p1-left-image").html("../img/"+stim["p1-left-image"]);
+      // $("#p1-right-image").html(stim["p1-right-image"]);
+      // $("#p1-correct").html(stim["p1-correct"]);
+      $("#p2-sentence").html(stim["p2-sentence"]);
+      // $("#p2-left-image").html(stim["p2-left-image"]);
+      // $("#p2-right-image").html(stim["p2-right-image"]);
+      // $("#p2-correct").html(stim["p2-correct"]);
+      $("#t-sentence").html(stim["t-sentence"]);
+      // $("#t-left-image").html(stim["t-left-image"]);
+      // $("#t-right-image").html(stim["t-right-image"]);
+      // $("#t-correct").html(stim["t-correct"]);
+      document.getElementById("p1-left-image").src="resources/img/" + stim["p1-left-image"];
+      document.getElementById("p1-right-image").src="resources/img/"+stim["p1-right-image"];
+      document.getElementById("p2-left-image").src="resources/img/"+stim["p2-left-image"];
+      document.getElementById("p2-right-image").src="resources/img/"+stim["p2-right-image"];
+      document.getElementById("t-left-image").src="resources/img/"+stim["t-left-image"];
+      document.getElementById("t-right-image").src="resources/img/"+stim["t-right-image"];  
+      window.addEventListener("keydown", continueKeys);          
 
-
-      this.stim = stim; //you can store this information in the slide so you can record it later.
 
     },
+    button1: function() {
 
+      this.p1_response = $('input[name="assess-p1"]:checked').val()
+      if (this.p1_response != "left" && this.p1_response != "right") {
+        $('.err').show();        
+      } else {
+        $('.err').hide();
+        document.getElementById('p1_div').style.display = 'none';
+        document.getElementById('p2_div').style.display = 'block';        
+        window.removeEventListener("keydown", continueKeys);
+        window.addEventListener("keydown", continueKeys2);            
+      }
+
+
+
+    }, 
+    button2: function() {
+      this.p2_response = $('input[name="assess-p2"]:checked').val()
+      if (this.p2_response != "left" && this.p2_response != "right") {
+        $('.err').show();  
+      } else {
+        $('.err').hide();
+        slide.condition = 1;
+        document.getElementById('p2_div').style.display = 'none';
+        document.getElementById('t_div').style.display = 'block'; 
+        window.removeEventListener("keydown", continueKeys2);
+        window.addEventListener("keydown", trialKeys);               
+
+      }
+
+    },            
     button : function() {
       //find out the checked option
-      this.log_responses();
+      this.t_response = $('input[name="assess-t"]:checked').val()      
+      if (this.t_response != "left" && this.t_response != "right") {
+        $('.err').show();  
+      } else {
+        $('.err').hide();      
+        window.removeEventListener("keydown", trialKeys);
+        window.addEventListener("keydown", continueKeys);
+
+        this.log_responses();
 
         /* use _stream.apply(this); if and only if there is
         "present" data. (and only *after* responses are logged) */
-      _stream.apply(this);
+        _stream.apply(this);
+      }  
+
       
     },
-
     log_responses : function() {
       exp.data_trials.push({
         "trial_type" : "primer",
-        "prime_status": this.stim[3], // don't forget to log the stimulus
-        "prime_sentence" : this.stim[0]
+        "trial_number" : exp.phase,
+        "filler" : this.stim["filler"],
+
+        "category" : this.stim["category"],
+        "p1-correct" : this.stim["p1-correct"],
+        "p1-response" : this.p1_response,
+        "p2-correct" : this.stim["p2-correct"],
+        "p2-response" : this.p2_response,
+        "t-correct" : this.stim["t-correct"],
+        "response" : $('input[name="assess-t"]:checked').val(),
       });
-    }
-  });  
+    }    
 
-
-// 
-  slides.weak_trial = slide({
-    name: "weak_trial",
-    present : [
-       ["there are 5 spades", "spad6.png", "better.png", "weak prime, they should choose image here",],
-    ],
-
-    present_handle : function(stim) {
-      $(".err").hide();
-
-      // uncheck the button and erase the previous value 
-      $("#weak_prime-test").html(stim[0]);
-      document.getElementById("weak_left-test").src=stim[1];
-      document.getElementById("weak_right-test").src=stim[2];
-
-
-      this.stim = stim; //you can store this information in the slide so you can record it later.
-
-    },    
-
-    button : function() {
-      //find out the checked option
-      this.log_responses();
-
-        /* use _stream.apply(this); if and only if there is
-        "present" data. (and only *after* responses are logged) */
-      _stream.apply(this);
-      
-    },
-
-    log_responses : function() {
-      exp.data_trials.push({
-        "trial_type" : "trial",
-        "prime_sentence" : this.stim[0],
-        "prime_status" : false,
-        "response" : $('input[name="assess"]:checked').val(),
-      });
-    },
   });
 
-
-  slides.strong_primer = slide({
-    name : "strong_primer",
-    present : _.shuffle([
-       ["There are 4 spades", "spad4.png", "spad6.png", "strong primer",],
-       ["There are 3 clubs", "club9.png", "club3.png", "strong primer",],
-       ["There are 5 hearts", "hear5.png", "hear6.png", "strong primer",],
-    ]),
-
-    //this gets run only at the beginning of the block
-    present_handle : function(stim) {
-      $(".err").hide();
-
-      // uncheck the button and erase the previous value 
-      $("#strong_primeSentence").html(stim[0]);
-      document.getElementById("strong_leftImage").src=stim[1];
-      document.getElementById("strong_rightImage").src=stim[2];
-
-
-      this.stim = stim; //you can store this information in the slide so you can record it later.
-
-    },
-
-    button : function() {
-      //find out the checked option
-      this.log_responses();
-
-        /* use _stream.apply(this); if and only if there is
-        "present" data. (and only *after* responses are logged) */
-      _stream.apply(this);
-      
-    },
-
-    log_responses : function() {
-      exp.data_trials.push({
-        "trial_type" : "primer",
-        "prime_status": this.stim[3], // don't forget to log the stimulus
-        "prime_sentence" : this.stim[0]
-      });
-    }
-  });  
-
-
-// 
-  slides.strong_trial = slide({
-    name: "strong_trial",
-    present : [
-       ["there are 4 diamonds", "diam5.png", "better.png", "strong prime, they should choose better here",],
-    ],
-
-    present_handle : function(stim) {
-      $(".err").hide();
-
-      // uncheck the button and erase the previous value 
-      $("#strong_prime-test").html(stim[0]);
-      document.getElementById("strong_left-test").src=stim[1];
-      document.getElementById("strong_right-test").src=stim[2];
-
-
-      this.stim = stim; //you can store this information in the slide so you can record it later.
-
-    },    
-
-    button : function() {
-      //find out the checked option
-      this.log_responses();
-
-        /* use _stream.apply(this); if and only if there is
-        "present" data. (and only *after* responses are logged) */
-      _stream.apply(this);
-      
-    },
-
-    log_responses : function() {
-      exp.data_trials.push({
-        "trial_type" : "trial",
-        "prime_sentence" : this.stim[0],
-        "prime_status" : true,
-        "response" : $('input[name="assess"]:checked').val(),
-      });
-    },
-  });
 
   slides.subj_info =  slide({
     name : "subj_info",
+    start : function() {
+      window.removeEventListener("keydown", continueKeys);
+    },
     submit : function(e){
       //if (e.preventDefault) e.preventDefault(); // I don't know what this means.
       exp.subj_data = {
@@ -245,8 +224,327 @@ function make_slides(f) {
   return slides;
 }
 
+
+var exampleKeys = function(event) {
+  console.log(event.key);
+  if (event.defaultPrevented) {
+    return;
+  }
+  switch (event.key) {
+    case " ":
+      $("#exampleButton1").click()
+      break;
+    default:
+      return;
+  }
+  event.preventDefault();
+}
+
+var exampleKeys2 = function(event) {
+  console.log(event.key);
+  if (event.defaultPrevented) {
+    return;
+  }
+  switch (event.key) {
+    case " ":
+      $("#exampleButton2").click()
+      break;
+    default:
+      return;
+  }
+  event.preventDefault();
+}
+var continueKeys = function(event) {
+  console.log(event.key);
+  if (event.defaultPrevented) {
+    return;
+  }
+  switch (event.key) {
+    case " ":
+      $("#continueButton").click()
+      break;
+    default:
+      return;
+  }
+  event.preventDefault();
+}
+
+var continueKeys2 = function(event) {
+  console.log(event.key);
+  if (event.defaultPrevented) {
+    return;
+  }
+  switch (event.key) {
+    case " ":
+      $("#continueButton2").click()
+      break;
+    default:
+      return;
+  }
+  event.preventDefault();
+}
+var trialKeys = function(event) {
+  console.log(event.key);
+  if (event.defaultPrevented) {
+    return;
+  }
+  switch (event.key) {
+    case " ":
+      $("#trialButton").click()
+      break;
+    default:
+      return;
+  }
+  event.preventDefault();
+}
 /// init ///
 function init() {
+  var item_dicts = [];
+  for (var i = 0; i < 3; i++) {
+    
+    prime_types = ["some_", "four_", "six_"];
+    prime_sentences = ["Some of the symbols are ", "There are four ", "There are six "];
+    for (var j = 0; j < 2; j++) {
+      strength_types = ["weak_", "strong_"];
+      for (var k = 0; k < 3; k++) {
+        trial_types = ["some", "four", "six"];
+
+        for (var x = 0; x < 1; x++ ) {
+          dict = {};
+          dict["filler"] = "false";
+
+          images = _.shuffle(['club', 'heart', 'diamond', 'spade', 'square']);
+          dict["category"] = prime_types[i] + strength_types[j] + trial_types[k];
+          dict["p1-sentence"] = prime_sentences[i] + images[0] + "s.";
+          dict["p2-sentence"] = prime_sentences[i] + images[1] + "s.";
+          dict["t-sentence"] = prime_sentences[k] + images[2]  + "s.";
+
+          if (i == 0) {
+            if (j == 1) {
+              var opt = _.shuffle([0, 1]);
+              var sents = [images[0]+"3"+images[3]+"6.png", images[0]+"9.png"];
+              dict["p1-left-image"] = sents[opt[0]];
+              dict["p1-right-image"] = sents[opt[1]];
+              dict["p1-correct"] = opt.indexOf(0);
+              
+              opt = _.shuffle([0, 1]);
+              sents = [images[1]+"3"+images[4]+"6.png", images[1]+"9.png"];
+              dict["p2-left-image"] = sents[opt[0]];
+              dict["p2-right-image"] = sents[opt[1]];
+              dict["p2-correct"] = opt.indexOf(0);                
+           
+            } else {
+              var opt = _.shuffle([0, 1]);
+              var sents = [images[0]+"9.png", images[3]+"9.png"];
+              dict["p1-left-image"] = sents[opt[0]];
+              dict["p1-right-image"] = sents[opt[1]];
+              dict["p1-correct"] = opt.indexOf(0);
+              
+              opt = _.shuffle([0, 1]);
+              sents = [images[1]+"9.png", images[4]+"9.png"];
+              dict["p2-left-image"] = sents[opt[0]];
+              dict["p2-right-image"] = sents[opt[1]];
+              dict["p2-correct"] = opt.indexOf(0);                   
+            }  
+          } else if (i == 1) {
+            if (j == 1 ) {
+              var opt = _.shuffle([0, 1]);
+              var sents = [images[0]+"4.png", images[0]+"6.png"];
+              dict["p1-left-image"] = sents[opt[0]];
+              dict["p1-right-image"] = sents[opt[1]];
+              dict["p1-correct"] = opt.indexOf(0);
+              
+              opt = _.shuffle([0, 1]);
+              sents = [images[1]+"4.png", images[1]+"6.png"];
+              dict["p2-left-image"] = sents[opt[0]];
+              dict["p2-right-image"] = sents[opt[1]];
+              dict["p2-correct"] = opt.indexOf(0);              
+            } else {
+              var opt = _.shuffle([0, 1]);
+              var sents = [images[0]+"6.png", images[0]+"2.png"];
+              dict["p1-left-image"] = sents[opt[0]];
+              dict["p1-right-image"] = sents[opt[1]];
+              dict["p1-correct"] = opt.indexOf(0);
+              
+              opt = _.shuffle([0, 1]);
+              sents = [images[1]+"6.png", images[1]+"2.png"];
+              dict["p2-left-image"] = sents[opt[0]];
+              dict["p2-right-image"] = sents[opt[1]];
+              dict["p2-correct"] = opt.indexOf(0);   
+            }
+   
+          } else if (i == 2) {
+            if (j == 1) {
+              var opt = _.shuffle([0, 1]);
+              var sents = [images[0]+"6.png", images[0]+"9.png"];
+              dict["p1-left-image"] = sents[opt[0]];
+              dict["p1-right-image"] = sents[opt[1]];
+              dict["p1-correct"] = opt.indexOf(0);
+              
+              opt = _.shuffle([0, 1]);
+              sents = [images[1]+"6.png", images[1]+"9.png"];
+              dict["p2-left-image"] = sents[opt[0]];
+              dict["p2-right-image"] = sents[opt[1]];
+              dict["p2-correct"] = opt.indexOf(0);              
+            } else {
+              var opt = _.shuffle([0, 1]);
+              var sents = [images[0]+"6.png", images[0]+"4.png"];
+              dict["p1-left-image"] = sents[opt[0]];
+              dict["p1-right-image"] = sents[opt[1]];
+              dict["p1-correct"] = opt.indexOf(0);
+              
+              opt = _.shuffle([0, 1]);
+              sents = [images[1]+"6.png", images[1]+"4.png"];
+              dict["p2-left-image"] = sents[opt[0]];
+              dict["p2-right-image"] = sents[opt[1]];
+              dict["p2-correct"] = opt.indexOf(0);   
+            }
+            
+          }
+          if (k == 0) {
+            dict["t-left-image"] = images[2] + "9.png";
+            dict["t-right-image"] = "better.png";
+            dict["t-correct"] = j;           
+          } else if (k == 1) {
+            dict["t-left-image"] = images[2] + "6.png";
+            dict["t-right-image"] = "better.png";
+            dict["t-correct"] = j;           
+
+          } else if (k == 2) {
+            dict["t-left-image"] = images[2] + "9.png";
+            dict["t-right-image"] = "better.png";
+            dict["t-correct"] = j;            
+          }
+        
+          item_dicts.push(dict);
+        }
+      }
+    }
+  } 
+
+  for (var i = 0; i < 3; i++) { 
+    prime_types = ["some_", "four_", "six_"];
+    prime_sentences = ["Some of the symbols are ", "There are four ", "There are six "];
+    for (var j = 0; j < 2; j++) {
+      strength_types = ["weak_", "strong_"];
+
+      for (var x = 0; x < 1; x++ ) {
+        dict = {};
+        dict["filler"] = "true";
+
+        images = _.shuffle(['club', 'heart', 'diamond', 'spade', 'square']);
+        dict["category"] = prime_types[i] + strength_types[j] + trial_types[k];
+        dict["p1-sentence"] = prime_sentences[i] + images[0] + "s.";
+        dict["p2-sentence"] = prime_sentences[i] + images[1] + "s.";
+        dict["t-sentence"] = prime_sentences[i] + images[2]  + "s.";
+
+        if (i == 0) {
+          if (j == 1) {
+            var opt = _.shuffle([0, 1]);
+            var sents = [images[0]+"3"+images[3]+"6.png", images[0]+"9.png"];
+            dict["p1-left-image"] = sents[opt[0]];
+            dict["p1-right-image"] = sents[opt[1]];
+            dict["p1-correct"] = opt.indexOf(0);
+            
+            opt = _.shuffle([0, 1]);
+            sents = [images[1]+"3"+images[4]+"6.png", images[1]+"9.png"];
+            dict["p2-left-image"] = sents[opt[0]];
+            dict["p2-right-image"] = sents[opt[1]];
+            dict["p2-correct"] = opt.indexOf(0);                
+         
+          } else {
+            var opt = _.shuffle([0, 1]);
+            var sents = [images[0]+"9.png", images[3]+"9.png"];
+            dict["p1-left-image"] = sents[opt[0]];
+            dict["p1-right-image"] = sents[opt[1]];
+            dict["p1-correct"] = opt.indexOf(0);
+            
+            opt = _.shuffle([0, 1]);
+            sents = [images[1]+"9.png", images[4]+"9.png"];
+            dict["p2-left-image"] = sents[opt[0]];
+            dict["p2-right-image"] = sents[opt[1]];
+            dict["p2-correct"] = opt.indexOf(0);                   
+          }            
+
+        } else if (i == 1) {
+          if (j == 1 ) {
+            var opt = _.shuffle([0, 1]);
+            var sents = [images[0]+"4.png", images[0]+"6.png"];
+            dict["p1-left-image"] = sents[opt[0]];
+            dict["p1-right-image"] = sents[opt[1]];
+            dict["p1-correct"] = opt.indexOf(0);
+            
+            opt = _.shuffle([0, 1]);
+            sents = [images[1]+"4.png", images[1]+"6.png"];
+            dict["p2-left-image"] = sents[opt[0]];
+            dict["p2-right-image"] = sents[opt[1]];
+            dict["p2-correct"] = opt.indexOf(0);              
+          } else {
+            var opt = _.shuffle([0, 1]);
+            var sents = [images[0]+"6.png", images[0]+"2.png"];
+            dict["p1-left-image"] = sents[opt[0]];
+            dict["p1-right-image"] = sents[opt[1]];
+            dict["p1-correct"] = opt.indexOf(0);
+            
+            opt = _.shuffle([0, 1]);
+            sents = [images[1]+"6.png", images[1]+"2.png"];
+            dict["p2-left-image"] = sents[opt[0]];
+            dict["p2-right-image"] = sents[opt[1]];
+            dict["p2-correct"] = opt.indexOf(0);   
+          }
+ 
+        } else if (i == 2) {
+          if (j == 1) {
+            var opt = _.shuffle([0, 1]);
+            var sents = [images[0]+"6.png", images[0]+"9.png"];
+            dict["p1-left-image"] = sents[opt[0]];
+            dict["p1-right-image"] = sents[opt[1]];
+            dict["p1-correct"] = opt.indexOf(0);
+            
+            opt = _.shuffle([0, 1]);
+            sents = [images[1]+"6.png", images[1]+"9.png"];
+            dict["p2-left-image"] = sents[opt[0]];
+            dict["p2-right-image"] = sents[opt[1]];
+            dict["p2-correct"] = opt.indexOf(0);              
+          } else {
+            var opt = _.shuffle([0, 1]);
+            var sents = [images[0]+"6.png", images[0]+"4.png"];
+            dict["p1-left-image"] = sents[opt[0]];
+            dict["p1-right-image"] = sents[opt[1]];
+            dict["p1-correct"] = opt.indexOf(0);
+            
+            opt = _.shuffle([0, 1]);
+            sents = [images[1]+"6.png", images[1]+"4.png"];
+            dict["p2-left-image"] = sents[opt[0]];
+            dict["p2-right-image"] = sents[opt[1]];
+            dict["p2-correct"] = opt.indexOf(0);   
+          }
+          
+        }
+        if (i == 0) {
+          dict["t-left-image"] = images[2] + "9.png";
+          dict["t-right-image"] = "better.png";
+          dict["t-correct"] = j;           
+        } else if (i == 1) {
+          dict["t-left-image"] = images[2] + "6.png";
+          dict["t-right-image"] = "better.png";
+          dict["t-correct"] = j;           
+
+        } else if (i == 2) {
+          dict["t-left-image"] = images[2] + "9.png";
+          dict["t-right-image"] = "better.png";
+          dict["t-correct"] = j;            
+        }
+      
+        item_dicts.push(dict);
+      } 
+    }
+  } 
+      
+
+  
+  exp.all_stims = _.shuffle(item_dicts);
+
   exp.trials = [];
   exp.catch_trials = [];
   exp.condition = _.sample(["CONDITION 1", "condition 2"]); //can randomize between subject conditions here
@@ -259,13 +557,15 @@ function init() {
       screenUW: exp.width
     };
   //blocks of the experiment:
-  exp.structure=["i0", "consent", "instructions", "weak_primer", "weak_trial", "strong_primer", "strong_trial", 'subj_info', 'thanks'];
+  exp.structure=["i0", "consent", "instructions","example1", "example2", "all_slides", 'subj_info', 'thanks'];
 
   exp.data_trials = [];
+  window.addEventListener("keydown", continueKeys);
   //make corresponding slides:
   exp.slides = make_slides(exp);
 
-  exp.nQs = utils.get_exp_length(); //this does not work if there are stacks of stims (but does work for an experiment with this structure)
+  exp.nQs = utils.get_exp_length();
+  console.log(exp.nQs); //this does not work if there are stacks of stims (but does work for an experiment with this structure)
                     //relies on structure and slides being defined
 
   $('.slide').hide(); //hide everything
