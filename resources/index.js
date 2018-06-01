@@ -61,13 +61,10 @@ function make_slides(f) {
     },    
     ex2button: function() {
       ex_response = $('input[name="assess-example2"]:checked').val()
-      if (ex_response == "right") {
+      if (ex_response == "right" || ex_response == "left") {
         window.removeEventListener("keydown", exampleKeys2);
         // window.addEventListener("keydown", continueKeys);
         exp.go();
-      } else if (ex_response == "left") {
-        $("#exampleErr2").html("Are you sure? Please consider which card best matches the sentence and and try again.")
-        $(".err").show();
       } else {
         $("#exampleErr2").html("Please select one of the cards")
         $(".err").show();
