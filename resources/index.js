@@ -63,6 +63,7 @@ function make_slides(f) {
       ex_response = $('input[name="assess-example2"]:checked').val()
       if (ex_response == "right" || ex_response == "left") {
         window.removeEventListener("keydown", exampleKeys2);
+        
         // window.addEventListener("keydown", continueKeys);
         exp.go();
       } else {
