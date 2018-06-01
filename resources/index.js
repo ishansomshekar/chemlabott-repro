@@ -177,7 +177,7 @@ function make_slides(f) {
         "p2-correct" : this.stim["p2-correct"],
         "p2-response" : this.p2_response,
         "t-correct" : this.stim["t-correct"],
-        "response" : $('input[name="assess-t"]:checked').val(),
+        "t-response" : this.t_response,
       });
     }    
 
@@ -433,7 +433,7 @@ function init() {
         dict["filler"] = "true";
 
         images = _.shuffle(['club', 'heart', 'diamond', 'spade', 'square']);
-        dict["category"] = prime_types[i] + strength_types[j] + trial_types[k];
+        dict["category"] = prime_types[i] + strength_types[j] + trial_types[i];
         dict["p1-sentence"] = prime_sentences[i] + images[0] + "s.";
         dict["p2-sentence"] = prime_sentences[i] + images[1] + "s.";
         dict["t-sentence"] = prime_sentences[i] + images[2]  + "s.";
