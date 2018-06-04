@@ -96,7 +96,7 @@ Otherwise, modified to whatever is required for you given your affliation.
   <p>You will read a number English sentences. For each sentence you will be asked to select the card which best reflects the meaning of the sentence. </p>
   <p>Click on the card with your mouse to select it, and then press the space bar (or click the continue button) to navigate to the next slide.</p>
   <p>
-  The next two slides will help to familiarize you with the task before the experiment begins.
+  The next three slides will help to familiarize you with the task before the experiment begins.
   </p>
 </p>
   <button id="consentButton" onclick="_s.button()">Continue</button>
@@ -122,6 +122,18 @@ Otherwise, modified to whatever is required for you given your affliation.
   </div>
   <input type="button" id="exampleButton2" value="Continue" onclick="_s.ex2button()"> 
   <div class="err" id="exampleErr2"></div> 
+
+</div>
+
+<div class="slide" id="example3">
+  <p> In some cases, you will be offered the choice of choosing a card or choosing "Better Image?" </p>
+  <p> There is a club above a square</p>
+  <div>
+    <label id="exp_radio"><input type="radio"   name="assess-example2" value="left" /><img src="resources/img/club1square1true.png" width="200" height="300"></label>
+    <label id="exp_radio"><input type="radio"  name="assess-example2" value="right"/><img src="resources/img/better.png" width="200" height="300"></label>   
+  </div>
+  <input type="button" id="exampleButton3" value="Continue" onclick="_s.ex3button()"> 
+  <div class="err" id="exampleErr3"></div> 
 
 </div>
 

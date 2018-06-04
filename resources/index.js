@@ -72,6 +72,27 @@ function make_slides(f) {
       }
     }
   });
+  slides.example3 = slide({
+    name : "example3",
+    start : function() {
+      window.addEventListener("keydown", exampleKeys3);
+    },    
+    ex3button: function() {
+      ex_response = $('input[name="assess-example2"]:checked').val()
+      if (ex_response == "left") {
+        window.removeEventListener("keydown", exampleKeys2);
+        
+        // window.addEventListener("keydown", continueKeys);
+        exp.go();
+      } else if (ex_response == "right") {
+        $("#exampleErr3").html("Are you sure? Please consider which card best matches the sentence and and try again.")
+        $(".err").show();
+      } else {
+        $("#exampleErr3").html("Please select one of the cards")
+        $(".err").show();
+      }
+    }
+  });  
   slides.all_slides = slide({
     name : "all_slides",
     present: exp.all_stims,
@@ -252,6 +273,21 @@ var exampleKeys2 = function(event) {
   }
   event.preventDefault();
 }
+var exampleKeys3 = function(event) {
+  console.log(event.key);
+  if (event.defaultPrevented) {
+    return;
+  }
+  switch (event.key) {
+    case " ":
+      $("#exampleButton3").click()
+      break;
+    default:
+      return;
+  }
+  event.preventDefault();
+}
+
 var continueKeys = function(event) {
   console.log(event.key);
   if (event.defaultPrevented) {
@@ -555,7 +591,7 @@ function init() {
       screenUW: exp.width
     };
   //blocks of the experiment:
-  exp.structure=["i0", "consent", "instructions","example1", "example2", "all_slides", 'subj_info', 'thanks'];
+  exp.structure=["i0", "consent", "instructions","example1", "example2", "example3", "all_slides", 'subj_info', 'thanks'];
 
   exp.data_trials = [];
   window.addEventListener("keydown", continueKeys);
