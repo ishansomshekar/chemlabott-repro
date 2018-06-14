@@ -422,13 +422,13 @@ function init() {
               dict["p2-correct"] = opt.indexOf(0);              
             } else {
               var opt = _.shuffle([0, 1]);
-              var sents = [images[0]+"6.png", images[0]+"4.png"];
+              var sents = [images[0]+"9.png", images[0]+"4.png"];
               dict["p1-left-image"] = sents[opt[0]];
               dict["p1-right-image"] = sents[opt[1]];
               dict["p1-correct"] = opt.indexOf(0);
               
               opt = _.shuffle([0, 1]);
-              sents = [images[1]+"6.png", images[1]+"4.png"];
+              sents = [images[1]+"9.png", images[1]+"4.png"];
               dict["p2-left-image"] = sents[opt[0]];
               dict["p2-right-image"] = sents[opt[1]];
               dict["p2-correct"] = opt.indexOf(0);   
